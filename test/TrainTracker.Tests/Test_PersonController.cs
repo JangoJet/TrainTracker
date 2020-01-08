@@ -40,5 +40,15 @@ namespace TrainTracker.Tests
             Assert.IsType<ActionResult<IEnumerable<Person>>>(persons);
       
         }
+
+        [Fact]
+        public void Get_WhenCalled_Returns201ObjectCreatedResult()
+        {
+            //Arrange
+            //Act
+            var result = (StatusCodeResult) _testPersonController.Post();
+            //Assert
+            Assert.Equal(201, result.StatusCode);
+        }
     }
 }

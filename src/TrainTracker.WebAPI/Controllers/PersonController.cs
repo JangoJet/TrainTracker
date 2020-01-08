@@ -23,5 +23,10 @@ namespace TrainTracker.WebAPI.Controllers
         {
             return Ok(_service.GetPeople());
         }
+        [HttpPost]
+        public ActionResult Post()
+        {
+            return StatusCode(StatusCodes.Status201Created);
+         }
     }
 }
