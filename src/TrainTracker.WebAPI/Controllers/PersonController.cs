@@ -21,12 +21,60 @@ namespace TrainTracker.WebAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Person>> Get()
         {
-            return Ok(_service.GetPeople());
+            return Ok(_service.GetAll());
         }
-        [HttpPost]
-        public ActionResult Post()
+
+        [HttpGet]
+        [Route("{Id}")]
+        public ActionResult<Person> GetById(int Id)
         {
-            return StatusCode(StatusCodes.Status201Created);
-         }
+            var person = _service.FindById(Id);
+            if (person == null) return NotFound();
+            return person;
+        }
+
+        [HttpPost]
+        public ActionResult Post(Person person)
+        {
+            //Only needed for the test.  APIController actually handles this.
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            _service.Create(person);
+            return CreatedAtAction(nameof(GetById), new { person.Id }, person);
+        }
+
+        [HttpDelete("{Id}")]
+        public ActionResult Delete(int Id)
+        {
+            var person = _service.FindById(Id);
+            if (person == null) return NotFound();
+            try
+                {
+                    _service.Remove(Id, person);
+                }
+                catch (Exception)
+                {
+                    return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                }
+            return NoContent();
+        }
+
+        [HttpPut]
+        public ActionResult Put(Person person)
+        {
+            if (_service.FindById(person.Id) == null) return NotFound();
+            try
+            {
+                _service.Update(person);
+            }
+            catch(Exception)
+            {
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
+            return NoContent();
+        }
     }
+
 }
