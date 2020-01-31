@@ -48,16 +48,21 @@ namespace TrainTracker.WebAPI.Controllers
         [HttpDelete("{Id}")]
         public ActionResult Delete(int Id)
         {
-            var person = _service.FindById(Id);
-            if (person == null) return NotFound();
+
             try
                 {
-                    _service.Remove(Id, person);
+                var person = _service.FindById(Id);
+                if (person == null) return NotFound();
+                _service.Remove(Id, person);
                 }
-                catch (Exception)
-                {
-                    return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-                }
+            catch (IndexOutOfRangeException)
+            {
+                return NotFound();
+            }
+            catch (Exception)
+             {
+              return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+             }
             return NoContent();
         }
 

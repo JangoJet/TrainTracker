@@ -128,6 +128,17 @@ namespace TrainTracker.Tests
             Assert.IsType<NoContentResult>(result);
         }
 
+        [Fact]
+        public void Delete_DuplicateId_BadRequest()
+        {
+            //Arrange
+            _testPersonController.Post(new Person() { Id = 1, FirstName = "Sandra", LastName = "Norton" });
+            //Act
+            ActionResult result = (NotFoundResult)_testPersonController.Delete(1);
+            //Assert
+            Assert.IsType<NotFoundResult>(result);
+        }
+
 
 
         //TODO test Overwrite

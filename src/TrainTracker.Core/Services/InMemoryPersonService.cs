@@ -27,7 +27,11 @@ namespace TrainTracker.Core.Services
 
         public Person FindById(int Id)
         {
-            return _people.Where(p => p.Id == Id).FirstOrDefault();
+            var results = _people.Where(p => p.Id == Id);
+
+            if(results.Count() >1) throw new IndexOutOfRangeException();
+            return results.FirstOrDefault();
+            
         }
 
         public void Remove(int id, Person person)
